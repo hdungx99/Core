@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.EF
 {
@@ -18,12 +19,28 @@ namespace Core.EF
             await _context.SaveChangesAsync();
         }
 
+        public async Task CreateListAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             var entity = await _dbSet.FindAsync(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteListAsync(IEnumerable<Guid?> ids)
+        {
+            var entities = _dbSet.Where(x => ids.Contains(x.Id));
+            if (entities != null)
+            {
+                _dbSet.RemoveRange(entities);
                 await _context.SaveChangesAsync();
             }
         }
@@ -43,9 +60,29 @@ namespace Core.EF
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<PagingRes?> Paging(PagingReq req)
+        {
+            if (req.expression != null)
+            {
+                var data = await _dbSet.Where(req.expression).ToListAsync();
+                return new PagingRes()
+                {
+                    data = data,
+                    total = data.Count()
+                };
+            }
+            return null;
+        }
+
         public async Task UpdateAsync(T entity)
         {
             await Task.Run(() => _dbSet.Update(entity));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateListAsync(IEnumerable<T> entities)
+        {
+            _dbSet.UpdateRange(entities);
             await _context.SaveChangesAsync();
         }
     }
