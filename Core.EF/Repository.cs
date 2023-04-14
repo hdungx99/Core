@@ -1,4 +1,5 @@
-﻿using Core.Model;
+﻿using Core.Cache;
+using Core.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -61,18 +62,24 @@ namespace Core.EF
 
         public async Task<T?> GetAsync(Guid id)
         {
-            var result = await _cache.GetStringAsync(id.ToString());
-            if (result != null)
+            //var result = await _cache.GetStringAsync(id.ToString());
+            if (_cache.TryGetValue(id.ToString(), out T? value))
             {
-                return JsonConvert.DeserializeObject<T>(result);
+                return value;
             }
             var response = await _dbSet.FindAsync(id);
-            await _cache.SetStringAsync(id.ToString(), JsonConvert.SerializeObject(response));
+            await _cache.SetAsync<T?>(id.ToString(), response, new DistributedCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromSeconds(60))
+                        .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600)));
             return response;
         }
 
         public async Task<PagingRes?> Paging(PagingReq req)
         {
+            if (req.cacheKey != null && _cache.TryGetValue(req.cacheKey.ToString(), out PagingRes? value))
+            {
+                return value;
+            }
             if (req.expression != null)
             {
                 var data = await _dbSet.Where(req.expression).ToListAsync();
@@ -83,7 +90,7 @@ namespace Core.EF
                     total = data.Count(),
                     cacheKey = cacheKey
                 };
-                await _cache.SetStringAsync(cacheKey.ToString(), JsonConvert.SerializeObject(result));
+                await _cache.SetAsync(cacheKey.ToString(), JsonConvert.SerializeObject(result));
                 return result;
             }
             return null;

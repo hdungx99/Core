@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.EF", "Core.EF\Core.EF.csproj", "{95A6B804-471C-40A8-B3FC-C778CC97161D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.EF", "Core.EF\Core.EF.csproj", "{95A6B804-471C-40A8-B3FC-C778CC97161D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Model", "Core.Model\Core.Model.csproj", "{31652C7C-AB96-4031-9A4F-74F82EE7165A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Model", "Core.Model\Core.Model.csproj", "{31652C7C-AB96-4031-9A4F-74F82EE7165A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Constant", "Core.Contant\Core.Constant.csproj", "{BCF218B4-6487-49EC-B3FB-83AF94AEAE11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Constant", "Core.Contant\Core.Constant.csproj", "{BCF218B4-6487-49EC-B3FB-83AF94AEAE11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Service", "Core.Service\Core.Service.csproj", "{161DB4B3-A539-4BA7-98AD-DCF4F44B4983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Cache", "Core.Cache\Core.Cache.csproj", "{3D693C3A-44F5-42E9-9868-42272DFCE476}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{BCF218B4-6487-49EC-B3FB-83AF94AEAE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCF218B4-6487-49EC-B3FB-83AF94AEAE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCF218B4-6487-49EC-B3FB-83AF94AEAE11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{161DB4B3-A539-4BA7-98AD-DCF4F44B4983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{161DB4B3-A539-4BA7-98AD-DCF4F44B4983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{161DB4B3-A539-4BA7-98AD-DCF4F44B4983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{161DB4B3-A539-4BA7-98AD-DCF4F44B4983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D693C3A-44F5-42E9-9868-42272DFCE476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D693C3A-44F5-42E9-9868-42272DFCE476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D693C3A-44F5-42E9-9868-42272DFCE476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D693C3A-44F5-42E9-9868-42272DFCE476}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
