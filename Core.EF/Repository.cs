@@ -1,5 +1,7 @@
 ﻿using Core.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Core.EF
 {
@@ -7,10 +9,12 @@ namespace Core.EF
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
-        public Repository(DbContext context)
+        private readonly IDistributedCache _cache;
+        public Repository(DbContext context, IDistributedCache cache)
         {
             _context = context;
             _dbSet = _context.Set<T>();
+            _cache = cache;
         }
 
         public async Task CreateAsync(T entity)
@@ -57,7 +61,14 @@ namespace Core.EF
 
         public async Task<T?> GetAsync(Guid id)
         {
-            return await _dbSet.FindAsync(id);
+            var result = await _cache.GetStringAsync(id.ToString());
+            if (result != null)
+            {
+                return JsonConvert.DeserializeObject<T>(result);
+            }
+            var response = await _dbSet.FindAsync(id);
+            await _cache.SetStringAsync(id.ToString(), JsonConvert.SerializeObject(response));
+            return response;
         }
 
         public async Task<PagingRes?> Paging(PagingReq req)
@@ -65,11 +76,15 @@ namespace Core.EF
             if (req.expression != null)
             {
                 var data = await _dbSet.Where(req.expression).ToListAsync();
-                return new PagingRes()
+                var cacheKey = new Guid();
+                var result = new PagingRes()
                 {
-                    data = data,
-                    total = data.Count()
+                    data = data.Skip(req.page * req.size).Take(req.size),
+                    total = data.Count(),
+                    cacheKey = cacheKey
                 };
+                await _cache.SetStringAsync(cacheKey.ToString(), JsonConvert.SerializeObject(result));
+                return result;
             }
             return null;
         }

@@ -4,7 +4,6 @@
     {
         public IEnumerable<BaseEntity>? data { get; set; }
         public int total { get; set; }
-        public int page { get; set; }
-        public int size { get; set; }
+        public Guid cacheKey { get; set; }
     }
 }
